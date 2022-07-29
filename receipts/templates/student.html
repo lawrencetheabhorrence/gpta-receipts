@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}{{ name }}{% endblock %}
+{% block content %}
+  <h1>{{ name }}</h1>
+  <h2> Receipts </h2>
+  <table class="table">
+    {% for r in paginated_receipts.items %}
+    <tr>
+      <td>{{ r['label'] }}</td>
+      <td>{{ r['refno'] }}</td>
+      <td>{{ url_for('receipt_single_view', id=r['id'] }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+  {{ render_navigation('paginated_receipts', 'student_view') }}
+{% endblock %}

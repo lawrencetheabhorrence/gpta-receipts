@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %} Students {% endblock %}
+{% block content %}
+  <h1>Students</h1>
+  <table class="table">
+  <tr>
+    <th>No.</th>
+    <th>First Name</th>
+    <th>Middle Name</th>
+    <th>Last Name</th>
+    <th>Batch</th>
+  </tr>
+  {% for s in paginated_students.items %}
+  <tr>
+    <td>{{ loop.index }}</tb>
+    <td>{{ s['firstname'] }}</td>
+    <td>{{ s['middlename']}}</td>
+    <td>{{ s['lastname'] }}</td>
+    <td>{{ s['batch'] }}</td>
+  </tr>
+  {% endfor %}
+  </table>
+
+  {{ render_navigation(paginated_students, "students") }}
+{% endblock %}

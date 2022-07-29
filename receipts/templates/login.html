@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %} Login {% endblock %}
+{% block content %}
+<h2 class="font-sans text-lg antialiased font-bold text-slate-50">New user? <a class="font-light no-underline italic" href="{{ url_for('register') }}">Register here.</a></h2>
+<form method="POST" class="font-sans text-base text-zinc-900">
+  {{ form.csrf_token }}
+  {% if form.errors %}
+	    <ul class="errors">
+        {% for field_name, field_errors in form.errors|dictsort if field_errors %}
+	            {% for error in field_errors %}
+	                <li>{{ form[field_name].label }}: {{ error }}</li>
+	            {% endfor %}
+	        {% endfor %}
+	    </ul>
+	{% endif %}
+  <div class="form-group">
+    {{ form.username.label }}
+    {{ form.username(class='form-control') }}
+  </div>
+  <div class="form-group">
+    {{ form.password.label }}
+    {{ form.password(class="form-control") }}
+  </div>
+  <button type="submit" class="btn btn-primary">Login</button>
+</form>
+{% endblock %}

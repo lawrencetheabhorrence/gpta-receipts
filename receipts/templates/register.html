@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %} Register {% endblock %}
+{% block content %}
+<form method="POST">
+  {{ form.csrf_token }}
+  {% if form.errors %}
+    <ul class="errors">
+      {% for field_name, field_errors in form.errors|dictsort if field_errors %}
+        {% for error in field_errors %}
+          <li>{{ form[field_name].label }}: {{ error }}</li>
+        {% endfor %}
+      {% endfor %}
+    </ul>
+  {% endif %}
+  <div class="form-group">
+    {{ form.firstname.label }}
+    {{ form.firstname(class='form-control', type='textinput') }}
+  </div>
+  <div class="form-group">
+    {{ form.middlename.label }}
+    {{ form.middlename(class='form-control', type='textinput') }}
+  </div>
+  <div class="form-group">
+    {{ form.lastname.label }}
+    {{ form.lastname(class='form-control', type='textinput') }}
+  </div>
+  <div class="form-group">
+    {{ form.username.label }}
+    {{ form.username(class='form-control', type='textinput') }}
+  </div>
+  <div class="form-group">
+    {{ form.password.label }}
+    {{ form.password(class='form-control') }}
+  </div>
+  <button type="submit">Register</button>
+</form>
+{% endblock %}
