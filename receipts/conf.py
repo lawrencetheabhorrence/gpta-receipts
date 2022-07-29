@@ -1,4 +1,5 @@
+import os
 MONGODB_SETTINGS = {
-  "host": "mongodb+srv://receipts-admin:rJzvINGi9oT5AmG5hcda5ULzc@receipts.4rvoarr.mongodb.net/?retryWrites=true&w=majority"
+    "host": os.environ['DB_HOST']
 }
-SECRET_KEY = "sekrethehe"
+SECRET_KEY = os.environ['SECRET_KEY']
