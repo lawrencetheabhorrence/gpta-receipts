@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% from "_formhelpers.html" import render_navigation %}
 {% block title %} Students {% endblock %}
 {% block content %}
   <h1>Students</h1>
@@ -12,7 +13,7 @@
   </tr>
   {% for s in paginated_students.items %}
   <tr>
-    <td>{{ loop.index }}</tb>
+    <td><a href="{{url_for('student_view',sid=s['pk'])}}">{{ loop.index }}</a></td>
     <td>{{ s['firstname'] }}</td>
     <td>{{ s['middlename']}}</td>
     <td>{{ s['lastname'] }}</td>

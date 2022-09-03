@@ -9,6 +9,7 @@ class Student(db.Document):
     firstname = db.StringField(max_length=100, required=True)
     lastname = db.StringField(max_length=100, required=True)
     middlename = db.StringField(max_length=100, required=False, default="")
+    section = db.StringField(max_length=100, required=False, default="")
     batch = db.IntField(min_value=2023, max_value=2028)
     receipts = db.ListField(db.ReferenceField(Receipt))
 
@@ -22,7 +23,7 @@ class AnonymousUser(AnonymousUserMixin):
         return False
 
 class User(db.Document, UserMixin):
-    isAdmin = db.BooleanField(required=True, default=False)
+    isAdmin = db.BooleanField(required=False, default=False)
     email = db.EmailField(required=True, unique=True)
     firstname = db.StringField(max_length=100, required=False)
     lastname = db.StringField(max_length=100, required=False)

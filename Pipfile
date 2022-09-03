@@ -16,6 +16,7 @@ flask-bootstrap = "*"
 flask-nav = "*"
 
 [dev-packages]
+pylint = "*"
 
 [requires]
 python_version = "3.9"

@@ -14,7 +14,7 @@ def register():
         if form.validate():
             existing_user = User.objects(email=form.email.data).first()
             if existing_user is None:
-                hashpass = bcrypt.generate_password_hash(form.password.data)
+                hashpass = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
                 u = User(isAdmin=False,
                          email=form.email.data,
                          firstname=form.firstname.data,
@@ -55,16 +55,35 @@ def entry():
     except KeyError:
         return redirect(url_for('login'))
 
-@app.route("/index", methods=['GET'])
+def get_all_names():
+    return [(s.name,str(s.pk)) for s in Student.objects]
+
+
+def get_all_ref():
+    return [(r.refno,str(r.pk)) for r in Receipt.objects]
+
+@app.route("/index", methods=['GET', 'POST'])
 @login_required
 def index():
+    if request.method == "POST":
+        print(request.form)
+        search = request.form['refsearch']
+        if request.form['nameref'] == 'name':
+            return redirect(url_for('students', query=search))
+        else:
+            return redirect(url_for('receipt_view',refno=search))
     return render_template('index.html')
 
-@app.route("/students", methods=['GET'])
+@app.route("/students/<query>", methods=['GET'])
 @login_required
-def students():
+def students(query=None):
     page_num = int(request.args.get("page") or 1)
     paginated_students = Student.objects.paginate(page=page_num, per_page=15)
+    if(query):
+        print(query)
+        collection = get_all_names()
+        results = [c[1] for c in collection if query in c[0]]
+        paginated_students = Student.objects(pk__in=results).paginate(page=page_num,per_page=15)
     return render_template('students.html', paginated_students=paginated_students)
 
 @app.route("/student/<sid>", methods=['GET'])
@@ -75,21 +94,21 @@ def student_view(sid=None):
     return render_template('student.html',name=f"{s.firstname} {s.middlename} {s.lastname}",
                            paginated_receipts=paginated_receipts)
 
-@app.route("/receipt/<rid>", methods=['GET'])
+@app.route("/receipt/<refno>", methods=['GET'])
 @login_required
-def receipt_view(rid=None):
-    receipt = Receipt.objects.get_or_404(pk=rid)
-    return render_template('receipt.html', student=receipt.student, schholyear=receipt.schoolyear, refno=receipt.refno)
+def receipt_view(refno=None):
+    receipt = Receipt.objects.get_or_404(refno=refno)
+    return render_template('receipt.html', student=receipt.student, schoolyear=receipt.schoolyear, refno=receipt.refno)
 
 class PasswordCreateField(Field):
     widget = PasswordInput()
 
     def process_formdata(self, valuelist):
         if valuelist:
-            self.data = str(bcrypt.generate_password_hash(str(valuelist[0])))
+            self.data = bcrypt.generate_password_hash(str(valuelist[0])).decode('utf-8')
 
     def _value(self):
-        return str(bcrypt.generate_password_hash(str(self.data))) if self.data is not None else ""
+        return str(bcrypt.generate_password_hash(str(self.data)).decode('utf-8')) if self.data is not None else ""
 
 class UserView(ModelView):
     column_list = ['isAdmin', 'email', 'username', 'firstname', 'lastname', 'middlename','password_hash']
